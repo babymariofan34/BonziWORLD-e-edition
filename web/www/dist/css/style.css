@@ -41,13 +41,6 @@ body, html  {
     display:block;
     padding-left:3px
 }
-
-.quote {
-    border-left: 3px solid grey;
-    display:block;
-    padding-left:3px
-}
-
 [data-style*="click"] {
     cursor: pointer;
 }
@@ -162,7 +155,8 @@ body, html  {
     position: relative;
 }
 #login_readme  {
-	unused-animation: fadeIn 5s;
+	animation: fadeIn 5s;
+    padding-bottom: 8px !important;
 }
 #login_readme .twitter-follow-button  {
     display: none;
@@ -369,7 +363,7 @@ body.side-bar-visible #room_background_wrapper  {
     left: 50%;
 }
 body  {
-    background-color: #421f60;
+    background-color: #7dcc66;
 }
 html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary, time, mark, audio, video  {
     margin: 0;
@@ -407,13 +401,14 @@ input[type="text"]  {
     border: 1px inset #AAA;
     color: #000;
 }
-.xp_bubble, .bubble, .bubble_rev {
-  background: #ffffe1;
-  color: #000;
-  -webkit-border-radius: 9px;
-  -moz-border-radius: 9px;
-  border-radius: 9px;
-  border: #000000 solid 1px; }
+.xp_bubble, .bubble  {
+    background: #ffffe1;
+    color: #000;
+    -webkit-border-radius: 9px;
+    -moz-border-radius: 9px;
+    border-radius: 9px;
+    border: #000000 solid 1px;
+}
 #extras-wrapper, .extras-wrapper  {
     width: 100%;
     width: 100vw;
@@ -671,7 +666,7 @@ body.vaporwave #chat_send:active  {
     background-position: 0 -56px;
 }
 #content  {
-    background-color: #6d33a0;
+    background-color: #86ff82;
     background-image: url("../../img/desktop/logo.png"), url("../../img/desktop/bonzi.png");
     background-position: top left, center;
     background-repeat: no-repeat;
@@ -722,7 +717,7 @@ body.vaporwave #chat_send:active  {
 #chat_send:not(.disabled):hover  {
     background-position: 0 -33px;
 }
-#chat_send:not(.disabled):active  {
+#chat_send:not(.disabled):active + input  {
     background-position: 0 -67px;
 }
 #chat_message_cont  {
@@ -759,21 +754,21 @@ body.vaporwave #chat_send:active  {
     background-image: url("../../img/desktop/tile.png");
 }
 #page_login  {
-    background-color: #8b5adc;
+    background-color: #89db59;
     background-image: url("../../img/logon/logo.png"), url("../../img/logon/top.png"), url("../../img/logon/bottom.png"), url("../../img/logon/topleft.png"), url("../../img/logon/divider.png");
     background-position: center, top, bottom, top left, center;
     background-size: auto, 100% 100px, 100% 122px, auto, 1px 100%;
     background-repeat: no-repeat;
 }
 #login_apps  {
-	unused-animation: fadeIn 4s;
+	animation: fadeIn 4s;
     display: flex;
     justify-content: center;
     padding: 16px;
     flex-wrap: wrap;
 }
 #login_card  {
-	unused-animation: fadeIn 3s;
+	animation: fadeIn 3s;
     background-image: url("../../img/logon/card.png");
     width: 353px;
     height: 70px;
@@ -795,7 +790,7 @@ body.vaporwave #chat_send:active  {
     box-sizing: border-box;
 }
 #login_error  {
-	unused-animation: fadeIn 2s;
+	animation: fadeIn 2s;
     top: 100%;
     position: absolute;
     margin-top: 46px;
@@ -804,7 +799,7 @@ body.vaporwave #chat_send:active  {
     padding: 8px;
 }
 #login_msg  {
-	unused-animation: fadeIn 2s;
+	animation: fadeIn 2s;
     top: 100%;
     position: absolute;
     margin-top: 8px;
@@ -815,11 +810,11 @@ body.vaporwave #chat_send:active  {
 #login_readme  {
     color: #444;
     padding: 12px;
-    bottom: 24%;
+    bottom: 10%;
     width: auto;
     transform: translateX(-50%);
+    transition: transform 500ms ease-in-out 25ms;
     -webkit-transform: translateX(-50%);
-	text-align: center;
     left: 50%;
 }
 #login_name, #login_room  {
@@ -827,21 +822,21 @@ body.vaporwave #chat_send:active  {
     box-sizing: border-box;
 }
 #login_name  {
-	unused-animation: fadeIn 1s;
+	animation: fadeIn 1s;
     height: 28px;
     top: 8px;
     left: 16px;
     font-size: 14px;
 }
 #login_room  {
-	unused-animation: fadeIn 1s;
+	animation: fadeIn 1s;
     height: 18px;
     top: 43px;
     left: 16px;
     font-size: 12px;
 }
 #login_go  {
-	unused-animation: fadeIn 1s;
+	animation: fadeIn 1s;
     left: 185px;
     top: 33%;
     position: absolute;
@@ -863,13 +858,13 @@ body.vaporwave #chat_send:active  {
 }
 #login_go  {
     top: 33%;
-    background-color: #FBC02D;
+    background-color: #50D125;
 }
 #login_go:hover, #login_go:active, #login_go:target  {
-    background-color: #FDD835;
+    background-color: #71DD4D;
 }
 #login_load  {
-	unused-animation: fadeIn 1s;
+	animation: fadeIn 1s;
     color: #fff;
     font-weight: bold;
     font-style: italic;
@@ -884,7 +879,7 @@ body.vaporwave #chat_send:active  {
     margin-left: 23px;
 }
 #login_version  {
-	unused-animation: fadeIn 2s;
+	animation: fadeIn 2s;
     color: #fff;
     position: absolute;
     right: 16px;
@@ -893,7 +888,7 @@ body.vaporwave #chat_send:active  {
     text-shadow: 2px 2px 4px rgb(0 0 0 / 50%);
 }
 #login_social  {
-	unused-animation: fadeIn 3s;
+	animation: fadeIn 3s;
     color: #fff;
     width: 100%;
     width: 100vw;
@@ -990,7 +985,6 @@ body.vaporwave #chat_send:active  {
     overflow: hidden;
 }
 .message_cont_arcade  {
-    z-index: 1;
     position: absolute;
     max-width: 100%;
     height: auto;
@@ -1085,7 +1079,7 @@ body.banned #page_login, body.kicked #page_login  {
     top: 0px;
     height: 100%;
     width: 100%;
-    background: rgba(142, 68, 173, 0.4);
+    background: rgba(101, 173, 68, 0.4);
     filter: blur(2px);
     -webkit-filter: blur(2px);
     backdrop-filter: blur(2px);

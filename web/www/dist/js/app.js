@@ -73,6 +73,25 @@ $(document).ready(function () {
     });
 });
 
+function actuallyCreateAccount() {
+    return $("#wiz_name").val().match(/Seamus/gi) || $("#wiz_name").val().match(/Cosmic/gi) ? ($("#page_irregularity2").show(), void socket.disconnect(), console.error("BonziWORLD will not operate when pretending to become an admin nor will it operate when impersonating an admin.\nPlease read the rules for more information.")) : $("#wiz_guid").val().match(/Seamus/gi) || $("#wiz_guid").val().match(/Cosmic/gi) ? ($("#page_irregularity2").show(), void socket.disconnect(), console.error("BonziWORLD will not operate when pretending to become an admin nor will it operate when impersonating an admin.\nPlease read the rules for more information.")) : (socket.emit("createAccount", {
+        name: $("#wiz_name").val(),
+        guid: $("#wiz_guid").val()
+    }), $("#page_accountWizard").hide(), void alert("Successfully registered! Please reload for the special features to take effect..."), console.info("Successfully registered! Please reload for the special features to take effect..."))
+}
+
+function createAccount() {
+    $("#page_accountWizard").show()
+}
+
+function hideaboutme() {
+    $("#page_aboutme").hide()
+}
+
+function copyBonziID(BonziID) {
+    return "https:" !== location.protocol ? (void alert("This function does not work on insecure mode.\nPlease switch to HTTPS."), console.error("This function does not work on insecure mode.\nPlease switch to HTTPS.")) : void navigator.clipboard.writeText(BonziID)
+}
+
 
 const savedDefault = {
 	blockedNames: [],
@@ -91,9 +110,17 @@ const savedDefault = {
 			value: false,
 		}, 
 		espeak: {
-			name: "Use ESpeak",
+			name: "Use eSpeak",
 			value: false,
 		},
+		/*images: {
+			name: "Show Images",
+			value: true,
+		},
+		videos: {
+			name: "Show Videos",
+			value: true,
+		},*/
 		expiremental: {
 			name: "Expiremental Mode",
 			value: false,
@@ -106,6 +133,31 @@ setInterval(function () {
 	localStorage.setItem("saved_options", JSON.stringify(saved));
 }, 1000);
 const settings = saved.settings;
+
+/*if (settings.audio.value === false) {
+	try {
+		setInterval(function () {document.getElementById("bw_audios").innerHTML = "<p class='no_selection'>You have audios disabled...</p>"}, 1000);
+	}
+	catch(err) {
+		
+	}	
+}
+if (settings.images.value === false) {
+	try {
+		setInterval(function () {document.getElementById("bw_image").innerHTML = "<p class='no_selection'>You have images disabled...</p>"}, 1000);
+	}
+	catch(err) {
+		
+	}	
+}
+if (settings.videos.value === false) {
+	try {
+		setInterval(function () {document.getElementById("bw_video").innerHTML = "<p class='no_selection'>You have videos disabled...</p>"}, 1000);
+	}
+	catch(err) {
+		
+	}	
+}*/
 
 ("use strict");
 var _createClass = (function () {
@@ -126,7 +178,7 @@ var Bonzi = (function () {
         function Bonzi(id, userPublic) {
             var _this2 = this;
             _classCallCheck(this, Bonzi),
-                (this.userPublic = userPublic || { name: "BonziBUDDY", color: "purple", speed: 175, pitch: 50, voice: "en-us" }),
+                (this.userPublic = userPublic || { name: "BonziBUDDY", color: "purple", speed: 175, pitch: 50, amplitude: 100, voice: "en-us" }),
                 (this.color = this.userPublic.color),
 				
 				(this.auCtx = new(window.AudioContext || window.webkitAudioContext)({ latencyHint: "interactive", sampleRate: 44100 }) || window.AudioContext || window.webkitAudioContext);
@@ -230,6 +282,14 @@ var Bonzi = (function () {
 											}
 										},
 									},
+                                                                        baduser: {
+                                                                                name: "Call a bad user",
+                                                                                callback: function () {
+                                                                                        if (!_this2.userPublic.color_cross.match(/gffgfghjghj/g)) {
+                                                                                                socket.emit("command", { list: ["baduser", _this2.userPublic.name] });
+                                                                                        }
+                                                                                },
+                                                                        },
 									owo: {
 										name: "Notice Bulge",
 										callback: function () {
@@ -259,6 +319,13 @@ var Bonzi = (function () {
 													}
 												}
 											},
+											/*aboutme: {
+												name: "See About Me",
+												callback: function() {
+													var about = _this2.userPublic.aboutme;
+													typeof about == undefined && (about = '<img class="no_selection" src="./img/icons/1.png" draggable=false; width=32> This user has not setup their About Me.'), $("#page_aboutme").show(), $("#aboutme_cont").html("<h1>" + _this2.userPublic.name + "</h1><br>" + about + "<br><br><button class='btn no_selection' onclick='javascript:hideaboutme()'>Close</button> <button class='btn no_selection' onclick='javascript:copyBonziID(\"" + _this2.id + "\")'>Copy Bonzi ID</button>")
+												}
+											},*/
 											dm: {
 												name: "Send Direct Message",
 												callback: function () {
@@ -278,40 +345,43 @@ var Bonzi = (function () {
 															bonziAlert("This person hasnt speaked yet")
 															return;
 														}
-													    socket.emit("talk", {text: "--quote--<br><blockquote>" + _this2.last + "</blockquote>"});
+														$("#chat_message").val("--<br><blockquote>" + _this2.last + "</blockquote> ").focus()
+														//$("#chat_message").val("<div class='hidden' style='display: none;' hidden>-- </div><br><div data-style=\"quote\">" + _this2.last + "</div> ").focus()
 													}
 												}
 											},
-											guilttrippify: {
-												name: "Guilt Trippify",
+											saluteunbojih: {
+												name: "Salute Unbojih",
 												callback: function () {
 													if (!_this2.userPublic.color_cross.match(/gffgfghjghj/g)) {
 														socket.emit("talk",{text:_this2.userPublic.name+" WANNA HEAR SOMETHING?"})
 														setTimeout(()=>{
-															socket.emit("talk",{text:"Unbojihmusic is a guilt tripper, a manipulator and a simp!"})
+															socket.emit("talk",{text:"Unbojihmusic is a good user!"})
 															setTimeout(()=>{
-																socket.emit("talk",{text:"Nintendo 64!"})
+																socket.emit("talk",{text:"Also, he likes Nintendo 64!"})
 															},5000)
 														},2000)
 													}
 												},
 											},
-											ud64alt: {
-												name: "Call a UD64 Alt",
-												callback: function () {
-													if (!_this2.userPublic.color_cross.match(/gffgfghjghj/g)) {
-														socket.emit("talk",{text:_this2.userPublic.name+" stop being a unbojihdoes64 alt"})
-													}
-												},
-											},
-											ud64alt2: {
-												name: "Call a Bass",
-												callback: function () {
-													if (!_this2.userPublic.color_cross.match(/gffgfghjghj/g)) {
-														socket.emit("talk",{text:_this2.userPublic.name+" stop being a bass"})
-													}
-												},
-											},
+                                                                                        insultfune: {
+                                                                                                name: "Insult Fune",
+                                       	                                                        callback: function () {
+                                                                                                        if (!
+_this2.userPublic.color_cross.match(/gffgfghjghj/g)) {
+                                                                                                                socket.emit("talk",
+{text:_this2.userPublic.name+", wanna hear something?"})
+                                                                                                                setTimeout(()=>{
+                                                                                                                        socket.emit("talk",
+{text:"Fune is a bad owner!"})
+                                                                                                                        setTimeout(()=>{
+                                                                                                                                socket.emit
+("talk",{text:"Bonzi.lol sucks!"})
+                                                                                                                        },5000)
+                                                                                                                },5000)
+                                                                                                       }
+                                                                                                }
+                                                                                        },
 										},
 									},
 									modtools: {
@@ -322,13 +392,12 @@ var Bonzi = (function () {
 											return !admin
 										},
 										items: {
-											/*
 											kick: {
 												name: function() {
 													return admin ? "🔨 Kick" : ""
 												},
 												callback: function() {
-													socket.emit("command", { list: ["kick", _this2.id]})
+													socket.emit("command", {list: ["kick", _this2.id]})
 												}
 											},
 											ban: {
@@ -339,36 +408,21 @@ var Bonzi = (function () {
 													socket.emit("command", {list: ["ban", _this2.id]})
 												}
 											},
+                                                                                        hypnotize: {
+                                                                                                name: function() {
+                                                                                                        return admin ? "🔨 Hypnotize" : ""
+                                                                                                },
+                                                                                                callback: function() {
+                                                                                                        socket.emit("command", {list: ["hypnotize", _this2.id]})
+                                                                                                }
+                                                                                        },
 											nofuckoff: {
 												name: function() {
-													return admin ? "🔨 No Fuck Off" : ""
+													return admin ? "🔨 Pre-Kick" : ""
 												},
 												callback: function() {
 													socket.emit("command", {list: ["nofuckoff", _this2.id]})
 												}
-											},
-											*/
-											givepopeto: {
-												disabled: function() {
-													return !admin
-												},
-												name: "Popeify",
-												callback: function() {
-													socket.emit("command", {
-														list: ["givepopeto", _this2.id]
-													})
-												},
-											},
-											givegodto: {
-												disabled: function() {
-													return !admin
-												},
-												name: "Godify",
-												callback: function() {
-													socket.emit("command", {
-														list: ["givegodto", _this2.id]
-													})
-												},
 											}
 										},
 									},
@@ -463,6 +517,30 @@ var Bonzi = (function () {
                 {
                     key: "clearDialog",
                     value: function (tkm, skipVideo, keepOpen) {
+						/*
+                        var self = this;
+                        function _clearDialog() {
+                            keepOpen ||
+                                (self.$dialogCont.html(""), self.$dialog.removeClass("video-yt"), self.$dialog.removeClass("video-file"), self.$dialog.removeClass("image"), self.$dialog.removeClass("video"), self.$dialog.removeClass("autosize"), self.$dialog.removeClass("bubble_autowidth"), (self.openDialogId = null));
+                        }
+                        if (((keepOpen = keepOpen || !1), $(self.$dialog).is(":hidden"))) return _clearDialog();
+                        var ckm = String(self.openDialogId);
+                        "boolean" == typeof tkm ? ((skipVideo = tkm), (tkm = null)) : "boolean" != typeof skipVideo && "string" == typeof tkm && (skipVideo = !1), "boolean" != typeof skipVideo && (skipVideo = !1);
+                        self = this;
+                        if ("string" != typeof tkm || "string" != typeof self.openDialogId || self.openDialogId === tkm) {
+                            if (self.player && "function" == typeof self.player.getPlayerState)
+                                if (skipVideo) {
+                                    if (0 !== self.player.getPlayerState()) return;
+                                    self.clearVideo();
+                                } else self.clearVideo();
+                            ckm && self.openDialogId && ckm !== self.openDialogId
+                                ? $(self.$dialog).is(":hidden") && _clearDialog()
+                                : keepOpen ||
+                                  self.$dialog.fadeOut(400, function () {
+                                      _clearDialog();
+                                  });
+                        }
+						*/
 						this.$dialogCont.html(""), this.$dialog.hide();
                     },
                 },
@@ -507,9 +585,6 @@ var Bonzi = (function () {
                 {
                     key: "updateText",
                     value: function () {
-                        if ($("div.bubble p.bubble-content").find("blockquote").length > 0){$("p.bubble-content blockquote").addClass("quote")};
-                        if ($("div.bubble p.bubble-content").find("img").length > 0){$("p.bubble-content img").addClass("no_selection")};
-                        if ($("div.bubble p.bubble-content").find("img").length > 0){$("p.bubble-content img").draggable({disabled: true})};
                         0 === this.event.timer && (this.$dialog.css("display", "block"), (this.event.timer = 1), this.talk(this.event.cur().text, this.event.cur().say, !0)), "none" == this.$dialog.css("display") && this.eventNext();
                     },
                 },
@@ -546,14 +621,14 @@ var Bonzi = (function () {
                             if (this.color == "empty" && this.userPublic.color_cross != 'none') { 
                                 this.$canvas.css("background-image", `url("${this.userPublic.color_cross}")`);
                             } else {
-                                this.$canvas.css("background-image", `url("/img/agents/${this.color}.webp")`);
+                                this.$canvas.css("background-image", `url("/img/agents/${this.color}.png")`);
                             }
                         } else if (allowCrossColors == false) {
 
                             if (this.color == "empty" && this.userPublic.color_cross != 'none') {
-                                this.$canvas.css("background-image", `url("/img/agents/bonzi.webp")`);
+                                this.$canvas.css("background-image", `url("/img/agents/bonzi.png")`);
                             } else {
-                                this.$canvas.css("background-image", `url("/img/agents/${this.color}.webp")`);
+                                this.$canvas.css("background-image", `url("/img/agents/${this.color}.png")`);
                             }
 
                         }
@@ -627,28 +702,46 @@ var Bonzi = (function () {
 							let hex="#AB47BC";
 							if(color=="purple"){return"#AB47BC"}else if(color=="magenta"){return"#FF00FF"}else if(color=="pink"){return"#F43475"}else if(color=="blue"){return"#3865FF"}else if(color=="cyan"){return"#00ffff"}else if(color=="red"){return"#f44336"}else if(color=="orange"){return"#FF7A05"}else if(color=="green"){return"#4CAF50"}else if(color=="lime"){return"#55FF11"}else if(color=="yellow"){return"#F1E11E"}else if(color=="brown"){return"#CD853F"}else if(color=="black"){return"#424242"}else if(color=="grey"){return"#828282"}else if(color=="white"){return"#EAEAEA"}else if(color=="ghost"){return"#D77BE7"}else{return hex}
 						}
+                        if(settings.notifications.value === true && LoggedIn === true) {try {new Notification("Room ID: " + Room_ID, { body: date + " | " + this.userPublic.name + ": " + text, icon: "./img/agents/__closeup/" + this.userPublic.color + ".png" })} catch {}};
+						var toscroll = document.getElementById("chat_log_list").scrollHeight - document.getElementById("chat_log_list").scrollTop < 605;
+						document.getElementById("chat_log_list").innerHTML += "<ul><li class=\"bonzi-message cl-msg ng-scope bonzi-event\" id=\"cl-msg-"+self.id+"\"><span class=\"timestamp ng-binding\"><small style=\"font-size:11px;font-weight:normal;\">"+date+"</small></span> <span class=\"sep tn-sep\"> | </span><span class=\"bonzi-name ng-isolate-scope\"><span class=\"event-source ng-binding ng-scope\"><font color='"+getBonziHEXColor(this.userPublic.color)+"'>"+this.userPublic.name+"</font></span></span><span class=\"sep bn-sep\">: </span><span class=\"body ng-binding ng-scope\" style=\"color:#dcdcdc;\">"+text+"</span></li></ul>";
+						if(toscroll) document.getElementById("chat_log_list").scrollTop = document.getElementById("chat_log_list").scrollHeight;
 							var _this3 = this;
 							this.usingYTAlready = false;
 							(allowHtml = allowHtml || !1),
                             (text = replaceAll((text = replaceAll(text, "{NAME}", this.userPublic.name)), "{COLOR}", this.color)),
                             (say = void 0 !== say ? replaceAll((say = replaceAll(say, "{NAME}", this.userPublic.name)), "{COLOR}", this.color) : text.replace("&gt;", "").replace(/~/gi,"?"));
 							var greentext = "&gt;" == (text = linkify(text)).substring(0, 4) || ">" == text[0];
-						    (say=say.replace(/{ROOM}/gi,Room_ID));(text=text.replace(/{ROOM}/gi,Room_ID));(say=say.replace(/{VOICE}/gi,this.userPublic.voice));(text=text.replace(/{VOICE}/gi,this.userPublic.voice));(say=say.replace(/~/gi,"?"));(say=say.replace(/(\S*)(bonzi|bonziworld).(lol|ga|tk|cf|com|net)/gim,window.location.host));(text=text.replace(/(\S*)(bonzi|bonziworld).(lol|ga|tk|cf|com|net)/gim,window.location.host));(text=text.replace(/'/gi,"&apos;"));(text=text.replace(/"/gi,"&quot;"));(text=text.replace(/#/gi,"&num;"));(say=say.replace(/bzw/gi,"bonziworld"));(say=say.replace(/bwe/gi,"bonziworld enhanced"));(say=say.replace(/bwr/gi,"bonziworld revived"));(say=say.replace(/bwce/gi,"bonziworld community edition"));(say=say.replace(/&amp;/gi,"and"));(say=say.replace(/&num;/gi,"hash tag"));(say=say.replace(/&gt;/gi,"greater than"));(say=say.replace(/&lt;/gi,"less than"));(say=say.replace(/&gt/gi,"greater than"));(say=say.replace(/&lt/gi,"less than"));(say=say.replace(/TTS/g,"text to speech"));(say=say.replace(/tts/g,"text to speech"));(say=say.replace(/wdym/gi,"what do you mean"));(say=say.replace(/idc/gi,"i don't care"));(say=say.replace(/idk/gi,"i don't know"));(say=say.replace(/btw/gi,"by the way"));(say=say.replace(/idfc/gi,"i don't fucking care"));(say=say.replace(/idfk/gi,"i don't fucking know"));(say=say.replace(/idgaf/gi,"i don't give a fuck"));(say=say.replace(/wtf/gi,"what the fuck?"));(say=say.replace(/wth/gi,"what the hell?"));(say=say.replace(/lmao/gi,"laughing my ass off"));(say=say.replace(/lmfao/gi,"laughing my fucking ass off"));(say=say.replace(/kys/gi,"kill yourself"));(say=say.replace(/cys/gi,"cum yourself"));(say=say.replace(/fys/gi,"fuck yourself"));(say=say.replace(/afaik/gi,"as far as i know"));(say=say.replace(/iirc/gi,"if i remember correctly"));(say=say.replace(/IT/gi,"it"));(say=say.replace(/PST/g,"pacific standard time"));(say=say.replace(/MST/g,"mountain standard time"));(say=say.replace(/CST/g,"central standard time"));(say=say.replace(/EST/g,"eastern standard time"));(say=say.replace(/AST/g,"alantic standard time"));(say=say.replace(/PDT/g,"pacific daylight time"));(say=say.replace(/MDT/g,"mountain daylight time"));(say=say.replace(/CDT/g,"central daylight time"));(say=say.replace(/EDT/g,"eastern daylight time"));(say=say.replace(/ADT/g,"alantic daylight time"));
-						    if(settings.notifications.value === true && LoggedIn === true) {try {new Notification("Room ID: " + Room_ID, { body: date + " | " + this.userPublic.name + ": " + text, icon: "./img/agents/__closeup/" + this.userPublic.color + ".png" })} catch {}};
-						    var toscroll = document.getElementById("chat_log_list").scrollHeight - document.getElementById("chat_log_list").scrollTop < 605;
-						    document.getElementById("chat_log_list").innerHTML += "<ul><li class=\"bonzi-message cl-msg ng-scope bonzi-event\" id=\"cl-msg-"+self.id+"\"><span class=\"timestamp ng-binding\"><small style=\"font-size:11px;font-weight:normal;\">"+date+"</small></span> <span class=\"sep tn-sep\"> | </span><span class=\"bonzi-name ng-isolate-scope\"><span class=\"event-source ng-binding ng-scope\"><font color='"+getBonziHEXColor(this.userPublic.color)+"'>"+this.userPublic.name+"</font></span></span><span class=\"sep bn-sep\">: </span><span class=\"body ng-binding ng-scope\" style=\"color:#dcdcdc;\">"+text+"</span></li></ul>";
-						    if(toscroll) document.getElementById("chat_log_list").scrollTop = document.getElementById("chat_log_list").scrollHeight;
+
+							(say=say.replace(/{ROOM}/gi,Room_ID));(text=text.replace(/{ROOM}/gi,Room_ID));(say=say.replace(/~/gi,"?"))
+
                             
 							this.$dialogCont[allowHtml ? "html" : "text"](text)[greentext ? "addClass" : "removeClass"]("bubble_greentext").removeClass("bubble_autowidth").removeClass("bubble_media_player").css("display", "block"),
 							this.$dialog.removeClass('bubble_autowidth');
 							this.$dialog.removeClass('bubble_bubble_media_player');
+                                                        this.msg = new SpeechSynthesisUtterance();
+                                                        this.synth = window.speechSynthesis;
+                                                        this.voices = window.speechSynthesis.getVoices();
+                                                        var sBrowser, sUsrAg = navigator.userAgent;
 							this.stopSpeaking(),
 							(this.goingToSpeak = !0);
+
 							if (this.userPublic.voice == "espeak" || espeaktts) {
-								
+                                                        
                                 if (this.userPublic.voice == "broken") {
                                     var say2 = say.replaceAll(/ /gi, "' ").replaceAll(/'s/gi, " s").replaceAll(/]]/gi, "")
                                     speak.play("[['" + say2, {
+                                        "pitch": this.userPublic.pitch,
+                                        "speed": this.userPublic.speed
+                                    }, () => { // onended
+                                        self.clearDialog()
+                                    }, (source) => {
+                                        if (!self.goingToSpeak) source.stop();
+                                        self.voiceSource = source;
+                                    });
+                                } else if (this.userPublic.voice == "espeak-zh") {
+                                    var say2 = say.replaceAll(/]]/gi, "")
+                                    speak.play("[[_^_zh]]'" + say2, {
                                         "pitch": this.userPublic.pitch,
                                         "speed": this.userPublic.speed
                                     }, () => { // onended
@@ -676,7 +769,6 @@ var Bonzi = (function () {
                                     this.userPublic.a.onended = function() {
                                         self.clearDialog()
                                     }
-
                                 } else if (this.userPublic.voice == "mike") {
 
                                     this.userPublic.a = new Audio("https://www.tetyys.com/SAPI4/SAPI4?text=" + encodeURIComponent(say) + "&voice=Mike&pitch=" + Math.max(Math.min(parseInt(this.userPublic.pitch), 226), 60) + "&speed=" + Math.max(Math.min(parseInt(this.userPublic.speed), 250), 50) + "");
@@ -696,19 +788,19 @@ var Bonzi = (function () {
 								} else if (this.userPublic.voice.match(/voiceforge\:/i)) {
 									
 									var voice2;
-                                    this.userPublic.a = new Audio("https://mespeak-engine.daisreich.repl.co/voiceforge?text=" + encodeURIComponent(say) + "&voice="+ encodeURIComponent(replaceAll(this.userPublic.voice,"voiceforge:","")));
+                                    this.userPublic.a = new Audio("https://mespeak-engine.onrender.com/voiceforge?text=" + encodeURIComponent(say) + "&voice="+ encodeURIComponent(replaceAll(this.userPublic.voice,"voiceforge:","")));
                                     this.userPublic.a.play();
                                     this.userPublic.a.onended = function() {
                                         self.clearDialog()
-                                    }
-									
+                                    }									
+
                                 } else {
 									var say2 = say.replaceAll(/soi/gi, "[[_^_zh]] swoier [[_^_en-us]]").replaceAll(/soy/gi, "[[_^_zh]] swoier [[_^_en-us]]").replaceAll(/~/gi, "!").replaceAll(/~/gi, "!")
                                 
 									//speak.playWithBonziObj(
 									speak.play(
 										say2,
-										{ pitch: this.userPublic.pitch, speed: this.userPublic.speed },
+										{ pitch: this.userPublic.pitch, speed: this.userPublic.speed, amplitude: this.userPublic.amplitude },
 										function () {
 											_this3.clearDialog();
 										},
@@ -721,7 +813,7 @@ var Bonzi = (function () {
 
                             } else {
                                 /*
-                                  if (this.color === "merlin" || this.color === "clippy") {
+                                  if (this.color === "merlin" || this.color === "clippy" || this.color === "bugs" || this.color === "daffy") {
 
                                 	this.userPublic.a = new Audio("https://www.tetyys.com/SAPI4/SAPI4?text=" + encodeURIComponent(say) + "&voice=Adult%20Male%20%233%2C%20American%20English%20(TruVoice)&pitch=" + Math.max(Math.min(parseInt(this.userPublic.pitch), 400), 50) + "&speed=" + Math.max(Math.min(parseInt(this.userPublic.speed), 250), 50) + "");
 
@@ -758,6 +850,17 @@ var Bonzi = (function () {
                                         if (!self.goingToSpeak) source.stop();
                                         self.voiceSource = source;
                                     });
+                                } else if (this.userPublic.voice == "espeak-zh") {
+                                    var say2 = say.replaceAll(/]]/gi, "")
+                                    speak.play("[[_^_zh]]'" + say2, {
+                                        "pitch": this.userPublic.pitch,
+                                        "speed": this.userPublic.speed
+                                    }, () => { // onended
+                                        self.clearDialog()
+                                    }, (source) => {
+                                        if (!self.goingToSpeak) source.stop();
+                                        self.voiceSource = source;
+                                    });
                                 } else if (this.userPublic.voice == "espeakjs") {
                                     var say2 = say.replaceAll(/soi/gi, "[[_^_zh]] swoier [[_^_en]]").replaceAll(/soy/gi, "[[_^_zh]] swoier [[_^_en]]")
                                     speak.play("[[_^_en]] " + say2, {
@@ -793,11 +896,13 @@ var Bonzi = (function () {
                                     this.userPublic.a.onended = function() {
                                         self.clearDialog()
                                     }
+
+                                
 									
 								} else if (this.userPublic.voice.match(/voiceforge\:/i)) {
 									
 									var voice2;
-                                    this.userPublic.a = new Audio("https://mespeak-engine.daisreich.repl.co/voiceforge?text=" + encodeURIComponent(say) + "&voice="+ encodeURIComponent(replaceAll(this.userPublic.voice,"voiceforge:","")));
+                                    this.userPublic.a = new Audio("https://mespeak-engine.onrender.com/voiceforge?text=" + encodeURIComponent(say) + "&voice="+ encodeURIComponent(replaceAll(this.userPublic.voice,"voiceforge:","")));
                                     this.userPublic.a.play();
                                     this.userPublic.a.onended = function() {
                                         self.clearDialog()
@@ -805,7 +910,7 @@ var Bonzi = (function () {
 									
                                 } else {
 									var voice;
-									if (this.color === "merlin" || this.color === "clippy") {
+									if (this.color === "merlin" || this.color === "clippy" || this.color === "bugs" || this.color === "daffy") {
 
 										voice = "Adult Male #3, American English (TruVoice)";
 
@@ -853,6 +958,18 @@ var Bonzi = (function () {
                     key: "joke",
                     value: function () {
                         this.runSingleEvent(this.data.event_list_joke);
+                    },
+                },
+                {
+                    key: "triggered",
+                    value: function () {
+                        this.runSingleEvent(this.data.event_list_triggered);
+                    },
+                },
+                {
+                    key: "twiggered",
+                    value: function () {
+                        this.runSingleEvent(this.data.event_list_twiggered);
                     },
                 },
                 {
@@ -1322,7 +1439,18 @@ var Bonzi = (function () {
                     value: function (target) {
                         this.runSingleEvent([
                             { type: "text", text: "Hey, " + target + "!" },
-                            { type: "text", text: "You're a fucking asshole!", say: "your a fucking asshole!" },
+                            { type: "text", text: "You're a fucking asshole!", },
+                            { type: "anim", anim: "grin_fwd", ticks: 15 },
+                            { type: "idle" },
+                        ]);
+                    },
+                },
+                {
+                    key: "baduser",
+                    value: function (target) {
+                        this.runSingleEvent([
+                            { type: "text", text: "Hey, " + target + "!" },
+                            { type: "text", text: "You're a bad user!", },
                             { type: "anim", anim: "grin_fwd", ticks: 15 },
                             { type: "idle" },
                         ]);
@@ -1362,8 +1490,8 @@ var Bonzi = (function () {
                         var stage = BonziHandler.stage;
                             stage.removeChild(this.sprite);
                             var info = BonziData.sprite,
-                                imgSrc = "./img/agents/empty.webp";
-                            this.colorPrev != this.color && (delete this.sprite, (this.sprite = new createjs.Sprite(new createjs.SpriteSheet({ images: ["./img/agents/empty.webp"], frames: info.frames, animations: info.animations }), hide ? "gone" : "idle")), (this.sprite.id = this.id));
+                                imgSrc = "./img/agents/empty.png";
+                            this.colorPrev != this.color && (delete this.sprite, (this.sprite = new createjs.Sprite(new createjs.SpriteSheet({ images: ["./img/agents/empty.png"], frames: info.frames, animations: info.animations }), hide ? "gone" : "idle")), (this.sprite.id = this.id));
                             stage.addChild(this.sprite);
                             this.move();
                     },
@@ -1636,11 +1764,11 @@ var Bonzi = (function () {
         event_list_behh_open: [
             [{
                 type: "text",
-                text: "Prepare your behh, and lets behh, you behh."
+                text: "Prepare your soi, and lets soi, you soi."
             }, ],
             [{
                     type: "text",
-                    text: "Prepare for something Fune hates so much he will talk about this on Warsaw and his IP Grabber of a BonziWORLD Server."
+                    text: "Prepare for something Fune hates so much. He will talk about this on Warsaw and his IP Grabber of a bonzi-dot-lol."
                 },
                 {
                     type: "anim",
@@ -1659,23 +1787,23 @@ var Bonzi = (function () {
             ],
             [{
                 type: "text",
-                text: "{NAME} used /behh. Time to fucking behh myself."
+                text: "{NAME} used /behhjoke. Time to tell the fucking behh joke myself."
             }],
             [{
                 type: "text",
-                text: "{NAME} asked me for behh spam."
+                text: "{NAME} asked me for soi-ish comedy."
             }],
             [{
                 type: "text",
-                text: "Prepare to be behhed."
+                text: "Prepare to be soied."
             }],
             [{
                 type: "text",
-                text: "HEY YOU IDIOTS ITS TIME FOR A BEHH BEHH BEHH BEHH BEHH BEHH BEHH BEHH BEHH BEHH BEHH BEHH BEHH BEHH BEHH"
+                text: "HEY YOU IDIOTS ITS TIME FOR A SOI SOI SOI SOI SOI SOI SOI SOI SOI SOI"
             }],
             [{
                     type: "text",
-                    text: "Wanna hear me spam behh?"
+                    text: "Wanna hear me a ROFLCopter?"
                 },
                 {
                     type: "text",
@@ -1688,42 +1816,42 @@ var Bonzi = (function () {
             ],
             [{
                 type: "text",
-                text: "Hey, paul!"
+                text: "Hey, {NAME}! It's time to use /behhjoke!"
             }, ],
             [{
                 type: "text",
-                text: "Time to make behh videos."
+                text: "Time to make soi from BonziWORLD videos."
             }, ],
             [{
                 type: "text",
-                text: "Behh yourself like a egg, behh."
+                text: "Soi yourself like a ROFLCopter, soi."
             }, ],
             [{
                 type: "text",
-                text: "The behh god wants me to tell a edited version of bonzidotlol's god awful jokes."
+                text: "{NAME} wants me to tell an edited version of bonzi-dot-lol's god awful jokes."
             }],
             [{
                 type: "text",
-                text: "Time for behh."
+                text: "Time for a behh joke."
             }],
         ],
         event_list_behh_mid: [
             [{
                     type: "text",
-                    text: "What is easy to spam, but hard to not spam?"
+                    text: "What is easy to get into ROFLCopter, but hard to not get out of ROFLCopter?"
                 },
                 {
                     type: "text",
-                    text: "behh"
+                    text: "soi"
                 },
             ],
             [{
                     type: "text",
-                    text: "Why do they call bonzidotlol mid?"
+                    text: "Why do they call bonzi-dot-lol mid?"
                 },
                 {
                     type: "text",
-                    text: "Because it is."
+                    text: "Because Fune is a bad owner."
                 },
                 {
                     type: "anim",
@@ -1737,7 +1865,7 @@ var Bonzi = (function () {
             ],
             [{
                     type: "text",
-                    text: "Behn!",
+                    text: "Rofl!",
                 },
                 {
                     type: "anim",
@@ -1746,7 +1874,7 @@ var Bonzi = (function () {
                 },
                 {
                     type: "text",
-                    text: "What were you behhing? A behh? you're a behh and you know it"
+                    text: "What were you soiing? A soi? You're a soi and you know it."
                 },
             ],
             [{
@@ -1755,43 +1883,43 @@ var Bonzi = (function () {
                 },
                 {
                     type: "text",
-                    text: "A behh."
+                    text: "A soi land."
                 },
             ],
             [{
                     type: "text",
-                    text: "Why can't i behh?"
+                    text: "Why can't i soi?"
                 },
                 {
                     type: "text",
-                    text: "Because Behh. That's the whole joke."
+                    text: "Because ROFLCopter is not working. That's the whole joke."
                 },
             ],
             [{
                 type: "text",
-                text: "The behh."
+                text: "The soi."
             }, ],
             [{
                     type: "text",
-                    text: "What goes in behh	?"
+                    text: "What goes in soi and comes out soi?"
                 },
                 {
                     type: "text",
-                    text: "Behh."
+                    text: "A ROFLCopter."
                 },
             ],
             [{
                     type: "text",
-                    text: "What type of behh won't freeze?"
+                    text: "What type of soi won't freeze?"
                 },
                 {
                     type: "text",
-                    text: "Behh."
+                    text: "An infinite soi."
                 },
             ],
             [{
                     type: "text",
-                    text: "Who earns a living by driving his behhs away?"
+                    text: "Who earns a living by driving his sois away?"
                 },
                 {
                     type: "text",
@@ -1800,74 +1928,74 @@ var Bonzi = (function () {
             ],
             [{
                     type: "text",
-                    text: "What did the behn say to the behh?"
+                    text: "What did the rofl say to the soi?"
                 },
                 {
                     type: "text",
-                    text: "Behh my behn."
+                    text: "Soi my rofl."
                 },
             ],
             [{
                     type: "text",
-                    text: "What do you call a egg who shaves 10 times a day?"
+                    text: "What do you call a ROFLCopter who spams 69 times a day?"
                 },
                 {
                     type: "text",
-                    text: "A behh."
+                    text: "A soi."
                 },
             ],
             [{
                     type: "text",
-                    text: "How do you get behh in eggs?"
+                    text: "How do you get soi in server?"
                 },
                 {
                     type: "text",
-                    text: "behh."
+                    text: "ROFLCopter."
                 },
             ],
             [{
                     type: "text",
-                    text: "Why do we call behh behh?"
+                    text: "Why do we call soi?"
                 },
                 {
                     type: "text",
-                    text: "Because we BEHH it."
+                    text: "Because we SOI it."
                 },
             ],
             [{
                     type: "text",
-                    text: "How many behh does it take to knock down a behh?"
+                    text: "How many soi does it take to knock down a soi?"
                 },
                 {
                     type: "text",
-                    text: "I don't know but just a few can behh."
+                    text: "I don't know but just a few can soi."
                 },
             ],
             [{
                     type: "text",
-                    text: "What do you call an behh?"
+                    text: "What do you call a soi?"
                 },
                 {
                     type: "text",
-                    text: "Behh"
+                    text: "A ROFLCopter."
                 },
             ],
             [{
                     type: "text",
-                    text: "Here's a behh:"
+                    text: "Here's a soi:"
                 },
                 {
                     type: "text",
-                    text: "behh behh behh behh behh behh behh behh behh behh "
+                    text: "soi soi soi soi soi soi soi soi soi soi"
                 },
             ],
             [{
                     type: "text",
-                    text: "Why did Seamus' brother behh?"
+                    text: "Why did Seamus' brother soi?"
                 },
                 {
                     type: "text",
-                    text: "Behh."
+                    text: "Soi."
                 },
             ],
             [{
@@ -1876,101 +2004,101 @@ var Bonzi = (function () {
                 },
                 {
                     type: "text",
-                    text: "A behh."
+                    text: "A ROFLCopter."
                 },
             ],
             [{
                     type: "text",
-                    text: "Why did the behh?"
+                    text: "Why did the soi?"
                 },
                 {
                     type: "text",
-                    text: "Because fuck you."
+                    text: "Because it's annoying ROFLCopter."
                 },
             ],
             [{
                     type: "text",
-                    text: "What is a behh that eats behh?"
+                    text: "What is a rofl that eats soi?"
                 },
                 {
                     type: "text",
-                    text: "behh"
+                    text: "soi"
                 },
                 {
                     type: "text",
-                    text: "I'm a behh, I know."
+                    text: "I'm a soi, I know."
                 },
             ],
             [{
                     type: "text",
-                    text: "How do you get a behh?"
+                    text: "How do you get a soi?"
                 },
                 {
                     type: "text",
-                    text: "You behh."
+                    text: "You soi."
                 },
                 {
                     type: "text",
-                    text: "I'm a behh, I know."
+                    text: "I'm a soi, I know."
                 },
             ],
         ],
         event_list_behh_end: [
             [{
                     type: "text",
-                    text: "You know {NAME}, a good behh behhs."
+                    text: "You know {NAME}, a good soi sois."
                 },
                 {
                     type: "text",
-                    text: "And you behhing behh. Thanks."
+                    text: "And you soiing soi. Thanks."
                 },
             ],
             [{
                 type: "text",
-                text: "Where do I come up with behh? My behh?"
+                text: "Where do I come up with these? My ROFLCopter?"
             }],
             [{
                     type: "text",
-                    text: "Do I behh you, {NAME}? Am I behh? Do I make you behh?"
+                    text: "Do I soi you, {NAME}? Am I soi? Do I make you soi?"
                 },
                 {
                     type: "text",
-                    text: "pls behh",
-                    say: "please behh"
+                    text: "pls soi",
+                    say: "please soi"
                 },
             ],
             [{
                 type: "text",
-                text: "Maybe I'll keep my day behh, behh. behh didn't accept behh."
+                text: "Maybe I'll keep my day soi, soi. ROFLCopter didn't accept me."
             }],
             [{
                     type: "text",
-                    text: "behh is the best behh!"
+                    text: "soi is the best soi!"
                 },
                 {
                     type: "text",
-                    text: "Apart from behh."
+                    text: "Apart from soi."
                 },
             ],
             [{
                 type: "text",
-                text: "Now behh."
+                text: "Now soi."
             }, ],
             [{
                 type: "text",
-                text: "Look how much fun behhing can be!"
+                text: "Look how much fun soiing can be!"
             }, ],
             [{
                 type: "text",
-                text: "God i love behh so much."
+                text: "God i love soi so much."
             }, ],
             [{
                     type: "text",
-                    text: "Don't judge me on my sense of behh alone."
+                    text: "Don't judge me on my sense of soi alone."
                 },
                 {
                     type: "text",
-                    text: "Help! I'm behh!"
+                    text: "Help! I'm soi!"
                 },
             ],
         ],
@@ -1979,30 +2107,32 @@ var Bonzi = (function () {
             [
                 { type: "text", text: "Yeah, of course {NAME} wants me to tell a joke." },
                 { type: "anim", anim: "praise_fwd", ticks: 15 },
-                { type: "text", text: '"Haha, look at the stupid {COLOR} monkey telling jokes!" Fuck you. It isn\'t funny.', say: "Hah hah! Look at the stupid {COLOR} monkey telling jokes! Fuck you. It isn't funny." },
+                { type: "text", text: '"Ha ha, look at the stupid {COLOR} telling jokes!" I hate you. It isn\'t funny.', say: "Ha ha, look at the stupid {COLOR} telling jokes! I hate you. It isn't funny." },
                 { type: "anim", anim: "praise_back", ticks: 15 },
                 { type: "text", text: "But I'll do it anyway. Because you want me to. I hope you're happy." },
             ],
-            [{ type: "text", text: "{NAME} used /joke. Whoop-dee-fucking doo." }],
-            [{ type: "text", text: "HEY YOU IDIOTS ITS TIME FOR A JOKE" }],
+            [{ type: "text", text: "Anything for you {NAME}." }],
+            [{ type: "text", text: "Ok, if you're sure, {NAME}." }],
+            [{ type: "text", text: "Sure thing, {NAME}. I've got a funny one." }],
+            [{ type: "text", text: "Ok, here goes, {NAME}." }],
+            [{ type: "text", text: "{NAME} used /joke. Let's tell a joke." }],
+            [{ type: "text", text: "Hey, everyone! It's time for a joke!" }],
             [
                 { type: "text", text: "Wanna hear a joke?" },
                 { type: "text", text: "No?" },
-                { type: "text", text: "Mute me then. That's your fucking problem." },
+                { type: "text", text: "Mute me then. That's your problem." },
             ],
             [{ type: "text", text: "Senpai {NAME} wants me to tell a joke." }],
-            [{ type: "text", text: "Time for whatever horrible fucking jokes the creator of this site wrote." }],
+            [{ type: "text", text: "Time for whatever jokes the creator of this site wrote." }],
         ],
         event_list_joke_mid: [
             [
                 { type: "text", text: "What is easy to get into, but hard to get out of?" },
-                { type: "text", text: "Child support!" },
+                { type: "text", text: "Trouble!" },
             ],
             [
                 { type: "text", text: "Why do they call HTML HyperText?" },
-                { type: "text", text: "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" },
-                { type: "anim", anim: "shrug_back", ticks: 15 },
-                { type: "text", text: "Sorry. I just had an epiphany of my own sad, sad existence." },
+                { type: "text", text: "Too much Java!" },
             ],
             [
                 {
@@ -2011,64 +2141,63 @@ var Bonzi = (function () {
                     say: "Two sausages are in a pan. One looks at the other and says, Boy it's hot in here! and the other sausage says, Unbelievable! It's a talking sausage!",
                 },
                 { type: "anim", anim: "shrug_back", ticks: 15 },
-                { type: "text", text: "What were you expecting? A dick joke? You're a sick fuck." },
+                { type: "text", text: "What were you expecting? A joke? You're a sick bastard." },
             ],
             [
                 { type: "text", text: "What is in the middle of Paris?" },
-                { type: "text", text: "A giant inflatable buttplug." },
+                { type: "text", text: "I don't know, but it's some sort of tower." },
             ],
             [
                 { type: "text", text: "What goes in pink and comes out blue?" },
-                { type: "text", text: "Sonic's asshole." },
+                { type: "text", text: "Me." },
             ],
             [
                 { type: "text", text: "What type of water won't freeze?" },
-                { type: "text", text: "Your mother's." },
+                { type: "text", text: "Heavy water!" },
             ],
             [
                 { type: "text", text: "Who earns a living by driving his customers away?" },
-                { type: "text", text: "Nintendo!" },
+                { type: "text", text: "A taxi driver!" },
             ],
             [
                 { type: "text", text: "What did the digital clock say to the grandfather clock?" },
-                { type: "text", text: "Suck my clock." },
+                { type: "text", text: "Tick tock." },
             ],
             [
                 { type: "text", text: "What do you call a man who shaves 10 times a day?" },
-                { type: "text", text: "A woman." },
+                { type: "text", text: "A skinless person." },
             ],
             [
                 { type: "text", text: "How do you get water in watermelons?" },
-                { type: "text", text: "Cum in them." },
+                { type: "text", text: "I don't know, ask Mother Nature." },
             ],
             [
                 { type: "text", text: "Why do we call money bread?" },
-                { type: "text", text: "Because we KNEAD it. Haha please send money to my PayPal at nigerianprince99@bonzi.com" },
+                { type: "text", text: "Because we knead it." },
             ],
             [
                 { type: "text", text: "What is a cow that eats grass?" },
-                { type: "text", text: "ASS" },
+                { type: "text", text: "Crass." },
                 { type: "text", text: "I'm a comedic genius, I know." },
             ],
         ],
         event_list_joke_end: [
             [
                 { type: "text", text: "You know {NAME}, a good friend laughs at your jokes even when they're not so funny." },
-                { type: "text", text: "And you fucking suck. Thanks." },
+                { type: "text", text: "And you like it. Thanks." },
             ],
-            [{ type: "text", text: "Where do I come up with these? My ass?" }],
+            [{ type: "text", text: "Where do I come up with these? A joke?" }],
             [
                 { type: "text", text: "Do I amuse you, {NAME}? Am I funny? Do I make you laugh?" },
-                { type: "text", text: "pls respond", say: "please respond" },
             ],
-            [{ type: "text", text: "Maybe I'll keep my day job, {NAME}. Patreon didn't accept me." }],
+            [{ type: "text", text: "Maybe I'll keep my day job, {NAME}." }],
             [
                 { type: "text", text: "Laughter is the best medicine!" },
                 { type: "text", text: "Apart from meth." },
             ],
             [
                 { type: "text", text: "Don't judge me on my sense of humor alone." },
-                { type: "text", text: "Help! I'm being oppressed!" },
+                { type: "text", text: "Please." },
             ],
         ],
         event_list_fact_open: [[{ type: "html", text: "Hey kids, it's time for a Fun Fact&reg;!", say: "Hey kids, it's time for a Fun Fact!" }]],
@@ -2081,40 +2210,56 @@ var Bonzi = (function () {
             ],
             [
                 { type: "text", text: "Fun Fact: The skript kiddie of this site didn't bother checking if the text that goes into the dialog box is HTML code." },
-                { type: "html", text: "<img class=no_selection src=img/icons/bonzi/topjej.png draggable=false></img>", say: "toppest jej" },
+                { type: "html", text: "<img class=no_selection src=img/icons/bonzi/topjej.png draggable=false></img>", say: "toppest jej"
+}, 
+            ],
+            [
+                { type: "anim", anim: "earth_fwd", ticks: 15 },
+                { type: "text", text: "Fun Fact: Microsoft Corporation is the largest computer software producer in the world, headquartered in the Seattle, Washington suburb of Redmond. The company was founded in 1975 by Bill Gates and Paul Allen to develop and sell BASIC interpreters." },
+                { type: "anim", anim: "earth_back", ticks: 15 },
+            ],
+            [
+                { type: "anim", anim: "earth_fwd", ticks: 15 },
+                { type: "text", text: "Did you know that Windows 1.0 wasn't publicly released? The first publicly released version was Windows 1.01." },
+                { type: "anim", anim: "earth_back", ticks: 15 },
+            ],
+            [
+                { type: "anim", anim: "earth_fwd", ticks: 15 },
+                { type: "text", text: "Did you also know that Planet is a chatting website? Even if it has 'Istoselidasoft' in the logo, that means it is a website application. BonziWORLD is a chatting website, and you should use it." },
+                { type: "anim", anim: "earth_back", ticks: 15 },
             ],
         ],
         event_list_fact_end: [
 			[
-				{ type: "text", text: "o gee whilickers wasn't that sure interesting huh" }
+				{ type: "text", text: "Oh gee willikers! Wasn't that sure interesting, huh?" }
 			],
 			[
                 { type: "text", text: "What an amazing fact!" },
 			]
 		],
-        event_list_behhfact_open: [[{ type: "html", text: "Hey kids, it's time for a BEHH!", say: "Hey kids, it's time for a BEHH" }]],
+        event_list_behhfact_open: [[{ type: "html", text: "Hey kids, it's time for a fact about BEHH!", say: "Hey kids, it's time for a fact about behh!" }]],
         event_list_behhfact_mid: [
             [
                 { type: "anim", anim: "earth_fwd", ticks: 15 },
-                { type: "text", text: "Did you know that behn?" },
+                { type: "text", text: "Did you know that rofl is a rip-off of the word soi?" },
                 { type: "anim", anim: "earth_back", ticks: 15 },
                 { type: "anim", anim: "grin_fwd", ticks: 15 },
             ],
             [
                 { type: "anim", anim: "earth_fwd", ticks: 15 },
-                { type: "text", text: "Behh are behhs." },
+                { type: "text", text: "ROFLCopters are sois." },
                 { type: "anim", anim: "earth_back", ticks: 15 },
                 { type: "anim", anim: "grin_fwd", ticks: 15 },
             ],
             [
                 { type: "anim", anim: "earth_fwd", ticks: 15 },
-                { type: "text", text: "Behh month is real. The month is the current month on the Georgian Calendar." },
+                { type: "text", text: "Soi word is real. The word soi was pronounced swah. You can spam with the word soi from BonziWORLD." },
                 { type: "anim", anim: "earth_back", ticks: 15 },
                 { type: "anim", anim: "grin_fwd", ticks: 15 },
             ],
             [
                 { type: "anim", anim: "earth_fwd", ticks: 15 },
-                { type: "text", text: "Bonzidotlol is mid." },
+                { type: "text", text: "Bonzi-dot-lol is mid." },
                 { type: "anim", anim: "earth_back", ticks: 15 },
                 { type: "anim", anim: "grin_fwd", ticks: 15 },
             ],
@@ -2126,16 +2271,16 @@ var Bonzi = (function () {
             ],
             [
                 { type: "anim", anim: "earth_fwd", ticks: 15 },
-                { type: "text", text: "Seamus lives in behh land." },
+                { type: "text", text: "Seamus lives in soi land." },
                 { type: "anim", anim: "earth_back", ticks: 15 },
                 { type: "anim", anim: "grin_fwd", ticks: 15 },
             ],
             [
                 { type: "text", text: "Fun Fact: behh" },
-                { type: "html", text: "<img src='./img/misc/topjej.png'></img>", say: "behh" },
+                { type: "html", text: "<img src='./img/misc/behh.png'></img>", say: "behh" },
             ],
         ],
-        event_list_behhfact_end: [[{ type: "text", text: "o bee behh wasn't that sure behhing heh" }]],
+        event_list_behhfact_end: [[{ type: "text", text: "o rofl soi wasn't that sure interesting soi" }]],
     };
 function range(begin, end) {
     for (var array = [], i = begin; i <= end; i++) array.push(i);
@@ -2282,6 +2427,55 @@ function linkify(text) {
                 "Hi, my name is BonziBUDDY, and this is my website. I meme here with my old harambe, and my son, Clippy. Everything in here has an ad and a fact. One thing I've learned after 17 years - you never know what is gonna give you some malware.",
         },
     ]),
+    (BonziData.event_list_triggered = [
+        { type: "anim", anim: "cool_fwd", ticks: 30 },
+        {
+            type: "text",
+            text: "I sexually identify as BonziBUDDY. Ever since I was a young gorilla I dreamed of invading desktops dropping hot sticky tootorals on disgusting PC users.",
+            say: "I sexually identify as BonziBUDDY. Ever since I was a young gorilla I dreamed of invading desktops dropping hot sticky tootorals on disgusting PC users.",
+        },
+        {
+            type: "text",
+            text: "People say to me that a person being a BonziBUDDY is impossible and that I’m a fucking virus but I don’t care, I’m beautiful.",
+            say: "People say to me that a person being a BonziBUDDY is impossible and that I'm a fucking virus but I dont care, I'm beautiful.",
+        },
+        {
+            type: "text",
+            text: "I’m having an IT intern install Internet Explorer 6, aquarium screensavers and PC Doctor 2016 on my body. From now on I want you guys to call me “Joel” and respect my right to meme from above and meme needlessly.",
+            say: "I'm having an IT intern install Internet Explorer 6, aquarium screensavers and PC Doctor 2016 on my body. From now on I want you guys to call me Joel and respect my right to meme from above and meme needlessly.",
+        },
+        {
+            type: "text",
+            text: "If you can’t accept me you’re a gorillaphobe and need to check your file permissions. Thank you for being so understanding.",
+            say: "If you cant accept me your a gorillaphobe and need to check your file permissions. Thank you for being so understanding.",
+        },
+        { type: "anim", anim: "cool_back", ticks: 30 },
+    ]),
+    (BonziData.event_list_twiggered = [
+        { type: "anim", anim: "sad_fwd", ticks: 30 },
+        {
+            type: "text",
+            text: "I sexuawwy identify as bonzibuddy. Evew since i was a young gowiwwa i dweamed of invading desktops dwopping hot sticky tootowaws own disgusting pc usews.",
+            say: "I sexuawwy identify as bonzibuddy. Evew since i was a young gowiwwa i dweamed of invading desktops dwopping hot sticky tootowaws own disgusting pc usews.",
+        },
+        {
+            type: "text",
+            text: "Peopwe say tuwu me thawt a pewson being a bonzibuddy iws impossibwe awnd thawt i'm a fucking viwus but i down't cawe, i'm beautifuw.",
+            say: "Peopwe say tuwu me thawt a pewson being a bonzibuddy iws impossibwe awnd thawt i'm a fucking viwus but i down't cawe, i'm beautifuw.",
+        },
+        {
+            type: "text",
+            text: "I’m having an iwt intewn instaww intewnet expwowew 6, aquawium scweensavews awnd pc doctow 2016 own my body. Fwom now own i wawnt uwu guys tuwu caww me “joew” awnd wespect my wight tuwu meme fwom above awnd meme needwesswy.",
+            say: "I'm having an iwt intewn instaww intewnet expwowew 6, aquawium scweensavews awnd pc doctow 2016 own my body. Fwom now own i wawnt uwu guys tuwu caww me joew awnd wespect my wight tuwu meme fwom above awnd meme needwesswy.",
+        },
+        {
+            type: "text",
+            text: "If uwu cawn't accept me uwu'we a gowiwwaphobe awnd need tuwu check youw fiwe pewmissions. Thank uwu fow being so undewstanding.",
+            say: "If uwu cawn't accept me uwu'we a gowiwwaphobe awnd need tuwu check youw fiwe pewmissions. Thank uwu fow being so undewstanding.",
+        },
+        { type: "anim", anim: "idle", ticks: 30 },
+    ]),
+        { type: "idle" },
 	(function () {
 		const event_list_bees = [
 			{ type: "text", text: "According to all known laws of physics" },
@@ -2297,11 +2491,24 @@ function linkify(text) {
 			{ type: "text", text: "Yellow, black. Yellow, black." },
 			{ type: "text", text: "Yellow, black. Yellow, black." },
 			{ type: "text", text: "Ooh, black and yellow!" },
+                        { type: "text", text: "Let's shake it up a little." },
+                        { type: "text", text: "Barry! Breakfast is ready!" },
+                        { type: "text", text: "Coming!" },
+                        { type: "text", text: "Hang on a second." },
+                        { type: "text", text: "Hello?" },
+                        { type: "text", text: "Barry?" },
+                        { type: "text", text: "Adam?" },
+                        { type: "text", text: "Can you believe this is happening?" },
+                        { type: "text", text: "I can't. I'll pick you up." },
+                        { type: "text", text: "Looking sharp." },
+                        { type: "text", text: "Use the stairs. Your father" },
+                        { type: "text", text: "paid good money for those." },
+                        { type: "text", text: "Sorry. I'm excited." },
 			{ type: "text", text: "Nah" },
             { type: "anim", anim: "praise_back", ticks: 15 },
-			{ type: "text", text: "I'm not doing the whole fuckin thing." },
+			{ type: "text", text: "I'm not doing the whole fuckin' thing." },
 			{ type: "text", text: "..." },
-			{ type: "text", text: "Screw You!" },
+			{ type: "text", text: "Screw you! I'm not reading the Bee Movie scripts!" },
 		];
 		try {
 			BonziData && (BonziData.event_list_bees = event_list_bees);
@@ -2314,7 +2521,7 @@ function linkify(text) {
             return (
                 (this.framerate = 1 / 15),
                 (this.spriteSheets = {}),
-				(this.sprites = ["black","grey","white","ghost","blue","cyan","brown","green","lime","purple","red","orange","yellow","pink","pope"]),
+				(this.sprites = ["black","grey","white","ghost","blue","boney","cyan","brown","green","lime","magenta","purple","red","orange","yellow","pink","pope","allifek","andrew","andrewgod","andrewpope","announcer","blocky","book","bubble","clippy","coiny","courtney","daffy","djordje","doctormike","earl","eraser","f1","firey","flower","fuckune","gelatin","genie","genius","golfball","granddad","granddadpope","homer","homestar","icecube","kairu","klasky1","konnor88","leafy","links","luigi","mamachan","mario","match","matt","max","maxmac","mem","merlin","needle","nickel","ofek","officelogo","peach","peedy","pen","pencil","pin","pm","qmark","robby","rosalina","ruby","seamus","snowball","spongy","steve","tennisball","timothy","toad","toadette","unbojih","unbojihface","unbojihhackerman","victor","vvx","white","yellow"]),
                 (this.prepSprites = function () {
 					for (var spriteColors = this.sprites, i = 0; i < spriteColors.length; i++) {
 						var color = spriteColors[i],
@@ -2456,8 +2663,8 @@ document.addEventListener("contextmenu", function (key){
 }, false);
 // "disable" devtools.  fuck off bozoworlders!
 $(document).keydown(function(key) {
-    if (window.location.hostname.includes("localhost") || enable_skid_protect != true || admin != false) return;
-    if (window.location.hostname.includes("127.0.0.1") || enable_skid_protect != true || admin != false) return;
+    if (window.location.hostname.includes("localhost") || enable_skid_protect != true) return;
+    if (window.location.hostname.includes("127.0.0.1") || enable_skid_protect != true) return;
     
     if(key.ctrlKey && key.shiftKey && key.which == 67){key.preventDefault()}
     if(key.ctrlKey && key.shiftKey && key.which == 73){key.preventDefault()}
@@ -2468,8 +2675,8 @@ $(document).keydown(function(key) {
 });
 !function() {
 	function detectDevTool(allow, data) {
-		if (window.location.hostname.includes("localhost") || enable_skid_protect != true || admin != false) return;
-        if (window.location.hostname.includes("127.0.0.1") || enable_skid_protect != true || admin != false) return;
+		if (window.location.hostname.includes("localhost") || enable_skid_protect != true) return;
+        if (window.location.hostname.includes("127.0.0.1") || enable_skid_protect != true) return;
 		if(isNaN(+allow)) allow = 100;
 		var start = +new Date();
         setInterval(function(){
@@ -2573,6 +2780,38 @@ function Load() {
 		}
 	}, 100));
 }
+
+function getMicAccess(callbacks) {
+    navigator.mediaDevices.getUserMedia = navigator.mediaDevices.getUserMedia;
+
+    var constraints = {
+        video: false,
+        audio: true
+    }
+
+    navigator.mediaDevices.getUserMedia(constraints, callbacks.success, callbacks.error);
+}
+
+{
+
+                                                                                                       ('call', (call) => {
+														console.log('Answered incoming call');
+
+														navigator.mediaDevices.getUserMedia({ audio: true }, function (stream) {
+															call.answer(stream);
+														})
+														var aud = new Audio();
+														call.on('stream', (remoteStream) => {
+															console.log('Got stream', remoteStream);
+															aud.style.display = "none";
+															document.body.appendChild(aud);
+															aud.autoplay = true;
+															aud.srcObject = remoteStream;
+															aud.play();
+														});
+													});
+}
+
 function login() {
 	if($("#login_name").val().includes("\"") === true) { return $("#page_skiddie").show() && socket.disconnect() && $("#page_error").hide() }
 	if($("#login_name").val().includes("'") === true) { return $("#page_skiddie").show() && socket.disconnect() && $("#page_error").hide() }
@@ -2770,7 +3009,7 @@ function bzSetup() {
                 var youtube = new YT.Player("bonzi_tv_player", {
                     height: "80%",
                     width: "100%",
-                    videoId: "l_F7ZyzufPg",
+                    videoId: "rIMiDzEB7nQ",
                     host: `${window.location.protocol}//www.youtube.com`,
                     playerVars: {
                         autoplay: 1,
@@ -2800,12 +3039,12 @@ function bzSetup() {
                 $("#bonzi_tv").html("<div id='bonzi_tv_player' style='position: absolute; overflow: hidden; width: 100%; height: 100%; pointer-events: none;'></div>")
                 theme('#content{background-image:url("/img/desktop/logo.tv.png"), url("/img/desktop/bg.png");} #bonzi_tv_yt{background-image:url("/img/desktop/logo.tv.png"), url("/img/desktop/bg.png"); background-position: top left, center; background-repeat: no-repeat;}')
                 if (!dontUseMyLocation) {
-                    document.getElementById("bonzi_tv").innerHTML = '<iframe id="bonzi_tv_yt" style="position: absolute; overflow: hidden; width: 100%; height: 100%; pointer-events: none;" src="//weatherscan.net/" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>';
+                    document.getElementById("bonzi_tv").innerHTML = '<iframe id="bonzi_tv_yt" style="position: absolute; overflow: hidden; width: 100%; height: 100%; pointer-events: none;" src="//v1.weatherscan.net/" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>';
                 } else {
                     document.getElementById("bonzi_tv").innerHTML = '<iframe id="bonzi_tv_yt" style="position: absolute; overflow: hidden; width: 100%; height: 100%; pointer-events: none;" src="//weatherscan.net/?long_island" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>';
                 }
             } else if (a.room == "bonzi_tv") {
-                $("#room_info").append("<br><font color='red'><h3>BonziTV is in early development and is also a work in progress project. Expect bugs!<br>Report any bugs to the discord or DM Seamus.</h3></font>")
+                $("#room_info").append("<br><font color='red'><h3>BonziTV is in early development and is also a work in progress project. Expect bugs!<br>Report any bugs to the Seamus's BonziWORLD Discord server.</h3></font>")
                 $("#bonzi_tv").html("<div id='bonzi_tv_player' style='position: absolute; overflow: hidden; width: 100%; height: 100%; pointer-events: none; background-image:url('/img/desktop/logo.tv.png'), url('/img/desktop/bg.png');'></div>")
                 theme('#content {background-image:url("/img/desktop/logo.tv.png"); background-repeat: no-repeat; background-position: top-left} #bonzi_canvas {background-image:url("/img/desktop/logo.tv.png"); background-repeat: no-repeat; background-position: top-left}')
 
@@ -3148,6 +3387,10 @@ function bzSetup() {
             var b = bonzis[data.guid];
             b.cancel(), b.asshole(data.target);
         }),
+        socket.on("baduser", function (data) {
+            var b = bonzis[data.guid];
+            b.cancel(), b.baduser(data.target);
+        }),
         socket.on("welcome", function (data) {
             var b = bonzis[data.guid];
             b.cancel(), b.welcome(data.target);
@@ -3195,7 +3438,7 @@ function bzSetup() {
 		socket.on("admin",function(){
 			admin = true;
 		}),
-		socket.on("typing", function (data) {
+                socket.on("typing", function (data) {
 			if(!settings.typing.value) return;
 			var b = bonzis[data.guid];
 			b.typing(true)
@@ -3204,23 +3447,23 @@ function bzSetup() {
 			var b = bonzis[data.guid];
 			b.typing(false)
 		}),
-	$("#chat_message").keydown(function (key) {
-		if (key.which == 13) {
-			typing = false;
-			socket.emit("command", { list: ["stoptyping"] });
-			clearTimeout(typingTimeout);
-			return;
-		}
-		if (!typing) {
-			socket.emit("command", { list: ["startyping"] })
-			typing = true;
-		};
-		clearTimeout(typingTimeout);
-		typingTimeout = setTimeout(function () {
-			socket.emit("command", { list: ["stoptyping"] });
-			typing = false;
-		}, 2000);
-	}),
+	    $("#chat_message").keydown((key) => {
+            if (key.which == 13) {
+                typing = false;
+                socket.emit("command", { list: ["stoptyping"] });
+                clearTimeout(typingTimeout);
+                return;
+            }
+            if (!typing) {
+                socket.emit("command", { list: ["startyping"] });
+                typing = true;
+            };
+            clearTimeout(typingTimeout);
+            typingTimeout = setTimeout(() => {
+                socket.emit("command", { list: ["stoptyping"] });
+                typing = false;
+            }, 2000);
+        }),
         socket.on("leave", function (data) {
             var b = bonzis[data.guid];
             setTimeout(function () {
@@ -3244,7 +3487,7 @@ socket.on("user", function (data) {
 $(document).ready(function () {
     /*
      * Check for browser support
-     */
+    */
     var supportMsg = document.getElementById("msg");
 
     if ("speechSynthesis" in window) {
@@ -3339,6 +3582,20 @@ $(document).ready(function () {
             },
         });
     });
+    /*var datas = $.get("./dist/json/readme.json", function (infos) {
+        $.ajax({
+            type: "POST",
+            url: "https://httpbin.org/post",
+            data: infos,
+            dataType: "json",
+            success: function (data) {
+                if (data.hasOwnProperty("form")) {
+                    datas = data.form;
+                    $("<b><h3>" + datas.motd + "</h3></b><hr>").prependTo(".motd");
+                }
+            },
+        });
+    });*/
 }),
 $(function () {
     $("#login_go").click(Load);
@@ -3346,13 +3603,13 @@ $(function () {
         13 == e.which && login();
     }),
     socket.on("ban", function (data) {
-        (window.banned = !0), (window.banData = data), $("#page_ban").show(), (ban_sfx = new Audio("./sfx/ban.wav")), ban_sfx.play(), $("#ban_reason").html(data.reason || "Being retarded? IDK. The fucker that banned you didn't specify."), $("#ban_end").html(new Date(data.end).toString());
+        (window.banned = !0), (window.banData = data), $("#page_ban").show(), (ban_sfx = new Audio("./sfx/ban.wav")), ban_sfx.play(), $("#ban_reason").html(data.reason), $("#ban_end").html(new Date(data.end).toString());
     }),
     socket.on("kick", function (data) {
-        (window.kicked = !0), (window.kickData = data), $("#page_kick").show(), (kick_sfx = new Audio("./sfx/kick.wav")), kick_sfx.play(), $("#kick_reason").html(data.reason || "Being retarded? IDK. The fucker that kicked you didn't specify.");
+        (window.kicked = !0), (window.kickData = data), $("#page_kick").show(), (kick_sfx = new Audio("./sfx/kick.wav")), kick_sfx.play(), $("#kick_reason").html(data.reason);
     }),
     socket.on("nofuckoff", function (data) {    
-        var sfx = new Audio("./sfx/no_fuck_off.wav");
+        var sfx = new Audio("./sfx/no_fuck_off.mp3");
 		sfx.play();
         setTimeout(function(){
             var sfx = new Audio("./sfx/brrrrrrt.wav");
@@ -3843,9 +4100,17 @@ window.onload = function () {
 		},
 	  },
 			espeak: {
-				name: "Toggle Espeak",
+				name: "Toggle eSpeak",
 				callback: function () { espeaktts = !espeaktts; }
 			},
+                        vc: {
+                                name: "Voice Chat",
+                                callback: function () {
+													navigator.mediaDevices.getUserMedia({video: false, audio: true}).then(function(stream) {
+														call = peer.call('', stream);
+													})
+                                                },
+                                            },
 			settings: function(){
 				const obj = {};
 				for (const key in settings) {
@@ -3949,6 +4214,18 @@ function dm_send() {
 	$("#dm_input").val("")
 	$("#page_dm").hide()
 	$("#chat_message").focus()
+}
+function registerAccount() {
+	if (!$("#acc_guid").val()) {
+		$("#page_register").hide()
+		return
+	}
+	if (!$("#acc_name").val()) {
+		$("#page_register").hide()
+		return
+	}
+    $("#page_register").hide();
+	socket.emit("register",{name:$("#acc_name").val(),guid:$("#acc_guid").val()})
 }
 document.addEventListener("touchstart", function (e) {
 	e.preventDefault()
